@@ -72,10 +72,10 @@ function percentage(partialValue, totalValue) {
 *  Mobile Zoom
 *
 */
-if (window.innerWidth <= 768) {
-    pinchZoom(img);
-}
 
+if (window.innerWidth <= 768) {
+    pinchZoom (img)
+}
 
 function pinchZoom (imageElement) {
     let imageElementScale = 1;

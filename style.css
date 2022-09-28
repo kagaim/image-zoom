@@ -21,17 +21,18 @@ h1 {
 .image-wrapper {
     position: relative;
     overflow: hidden;
-    max-width: 768px;
+    max-width: 200px;
     margin: 0 auto;
     display: block;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    will-change: background-position;
 }
 
 @media screen and (min-width: 768px) {
     .image-wrapper {
         cursor: zoom-in;
-        background-repeat: no-repeat;
-        background-size: 100%;
-        will-change: background-position;
+        max-width: 768px;
     }
 }
 
@@ -45,11 +46,5 @@ h1 {
 }
 
 .image-wrapper__mobile-zoomed > img {
-    opacity: 1;
-}
-
-
-.mobile-tests {
-    text-align: center;
-    font-weight: 700;
+    opacity: 0;
 }
