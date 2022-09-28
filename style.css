@@ -24,10 +24,15 @@ h1 {
     max-width: 768px;
     margin: 0 auto;
     display: block;
-    cursor: zoom-in;
-    background-repeat: no-repeat;
-    background-size: 100%;
-    will-change: background-position;
+}
+
+@media screen and (min-width: 768px) {
+    .image-wrapper {
+        cursor: zoom-in;
+        background-repeat: no-repeat;
+        background-size: 100%;
+        will-change: background-position;
+    }
 }
 
 .image-wrapper__zoomed {

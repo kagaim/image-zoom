@@ -1,21 +1,28 @@
 const wrapper = document.querySelector('.image-wrapper')
 const img = wrapper.querySelector('img')
-let isZoomed = false
 
+/*
+*
+*  Desktop Zoom
+*
+*/
+let isZoomed = false
 img.addEventListener('click', (e) => {
-    const url = e.target.src
-    wrapper.style.backgroundImage = `url('${url}')`;
-    wrapper.classList.toggle('image-wrapper__zoomed')
-    if (wrapper.classList.contains('image-wrapper__zoomed')) {
-        isZoomed = true
-        backgroundImagePosition(e)
-    } else {
-        isZoomed = false
+    if (window.innerWidth > 768) {
+        const url = e.target.src
+        wrapper.style.backgroundImage = `url('${url}')`;
+        wrapper.classList.toggle('image-wrapper__zoomed')
+        if (wrapper.classList.contains('image-wrapper__zoomed')) {
+            isZoomed = true
+            backgroundImagePosition(e)
+        } else {
+            isZoomed = false
+        }
     }
 })
 
 img.addEventListener('mousemove', (e) => {
-    if (isZoomed) {
+    if (isZoomed && window.innerWidth > 768) {
         backgroundImagePosition(e)
     }
 })
@@ -59,3 +66,10 @@ function getCursorPos(e) {
 function percentage(partialValue, totalValue) {
     return (100 * partialValue) / totalValue;
 }
+
+/*
+*
+*  Mobile Zoom
+*
+*/
+
