@@ -47,3 +47,9 @@ h1 {
 .image-wrapper__mobile-zoomed > img {
     opacity: 1;
 }
+
+
+.mobile-tests {
+    text-align: center;
+    font-weight: 700;
+}
