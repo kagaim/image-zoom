@@ -1,5 +1,40 @@
+body {
+    background-color: antiquewhite;
+}
+
 .container {
     max-width: 1024px;
     margin: 0 auto;
     position: relative;
+}
+
+img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+h1 {
+    text-align: center;
+}
+
+.image-wrapper {
+    position: relative;
+    overflow: hidden;
+    max-width: 768px;
+    margin: 0 auto;
+    display: block;
+    cursor: zoom-in;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    will-change: background-position;
+}
+
+.image-wrapper__zoomed {
+    cursor: zoom-out;
+    background-size: 200%;
+}
+
+.image-wrapper__zoomed > img {
+    opacity: 0;
 }
