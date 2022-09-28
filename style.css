@@ -43,3 +43,7 @@ h1 {
 .image-wrapper__zoomed > img {
     opacity: 0;
 }
+
+.image-wrapper__mobile-zoomed > img {
+    opacity: 1;
+}

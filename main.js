@@ -10,7 +10,7 @@ let isZoomed = false
 img.addEventListener('click', (e) => {
     if (window.innerWidth > 768) {
         const url = e.target.src
-        wrapper.style.backgroundImage = `url('${url}')`;
+        wrapper.style.backgroundImage = `url('${url}')`
         wrapper.classList.toggle('image-wrapper__zoomed')
         if (wrapper.classList.contains('image-wrapper__zoomed')) {
             isZoomed = true
@@ -72,9 +72,12 @@ function percentage(partialValue, totalValue) {
 *  Mobile Zoom
 *
 */
-if (window.innerWidth <= 768) {
-    pinchZoom (img)
-}
+
+
+
+
+
+
 
 function pinchZoom (imageElement) {
     let imageElementScale = 1;
@@ -89,6 +92,10 @@ function pinchZoom (imageElement) {
     imageElement.addEventListener('touchstart', (event) => {
       if (event.touches.length === 2) {
         event.preventDefault(); // Prevent page scroll
+
+        const url = event.target.src
+        wrapper.style.backgroundImage = `url('${url}')`;
+        wrapper.classList.add('image-wrapper__mobile-zoomed')
   
         // Calculate where the fingers have started on the X and Y axis
         start.x = (event.touches[0].pageX + event.touches[1].pageX) / 2;
@@ -108,9 +115,12 @@ function pinchZoom (imageElement) {
           scale = event.scale;
         } else {
           const deltaDistance = distance(event);
+          const startDistance =  start.distance;
           scale = deltaDistance / startDistance;
         }
-  
+        
+        document.querySelector('#distance').textContent = scale
+
         imageElementScale = Math.min(Math.max(1, scale), 4);
   
         // Calculate how much the fingers have moved on the X and Y axis
@@ -124,13 +134,13 @@ function pinchZoom (imageElement) {
         imageElement.style.zIndex = "9999";
       }
     });
-    
-    // Uncomment the below code to reset image to it's original format
-
-    // imageElement.addEventListener('touchend', (event) => {
-    //   imageElement.style.transform = "";
-    //   imageElement.style.WebkitTransform = "";
-    //   imageElement.style.zIndex = "";
-    // });
-
+  
+    imageElement.addEventListener('touchend', (event) => {
+        wrapper.classList.remove('image-wrapper__mobile-zoomed')
+        // Reset image to it's original format
+        // imageElement.style.transform = "";
+        // imageElement.style.WebkitTransform = "";
+        // imageElement.style.zIndex = "";
+    });
   }
+
