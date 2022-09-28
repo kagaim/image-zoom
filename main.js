@@ -77,24 +77,26 @@ function percentage(partialValue, totalValue) {
 const para = document.querySelector("#distance")
 const scale = document.querySelector("#scale")
 
+para.textContent = '1212'
+
 img.addEventListener('touchstart', (event) => {
     para.innerHTML = getIniTouches(event)
 })
 
 // Calculate distance between two fingers
-const distance = (event) => {
-    return Math.hypot(event.touches[0].pageX - event.touches[1].pageX, event.touches[0].pageY - event.touches[1].pageY);
-};
+// const distance = (event) => {
+//     return Math.hypot(event.touches[0].pageX - event.touches[1].pageX, event.touches[0].pageY - event.touches[1].pageY);
+// };
 
-// Get initial mobile touches
-function getIniTouches(event) {
-    event.preventDefault(); 
-    let x, y, d 
+// // Get initial mobile touches
+// function getIniTouches(event) {
+//     event.preventDefault(); 
+//     let x, y, d 
 
-    // Calculate where the fingers have started on the X and Y axis
-    x = (event.touches[0].pageX + event.touches[1].pageX) / 2;
-    y = (event.touches[0].pageY + event.touches[1].pageY) / 2;
-    d = distance(event);
+//     // Calculate where the fingers have started on the X and Y axis
+//     x = (event.touches[0].pageX + event.touches[1].pageX) / 2;
+//     y = (event.touches[0].pageY + event.touches[1].pageY) / 2;
+//     d = distance(event);
 
-    return {x : x, y : y, d : d};
-}
+//     return {x : x, y : y, d : d};
+// }
