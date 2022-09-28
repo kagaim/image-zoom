@@ -78,7 +78,7 @@ const para = document.querySelector("#distance")
 const scale = document.querySelector("#scale")
 
 img.addEventListener('touchstart', (event) => {
-    para.textContent = getIniTouches(event)
+    para.innerHTML = getIniTouches(event)
 })
 
 // Calculate distance between two fingers
