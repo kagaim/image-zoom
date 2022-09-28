@@ -72,12 +72,9 @@ function percentage(partialValue, totalValue) {
 *  Mobile Zoom
 *
 */
-
-
-
-
-
-
+if (window.innerWidth <= 768) {
+    pinchZoom(img)
+}
 
 function pinchZoom (imageElement) {
     let imageElementScale = 1;
@@ -119,7 +116,7 @@ function pinchZoom (imageElement) {
           scale = deltaDistance / startDistance;
         }
         
-        document.querySelector('#distance').textContent = scale
+        document.querySelector('#distance').textContent = `Scale => ${scale}`
 
         imageElementScale = Math.min(Math.max(1, scale), 4);
   
