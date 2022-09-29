@@ -1,31 +1,56 @@
-const wrapper = document.querySelector('.image-wrapper')
-const img = wrapper.querySelector('img')
+// Global Variables
+const wrapper = document.querySelector('.image-wrapper') // Image Wrapper
+const img = wrapper.querySelector('img') // Image
+let isZoomed = false
+let values = [] // Mobile x,y and distance values generated on touch
 
 /*
 *
 *  Desktop Zoom
 *
 */
-let isZoomed = false
-img.addEventListener('click', (e) => {
-    if (window.innerWidth > 768) {
-        const url = e.target.src
-        wrapper.style.backgroundImage = `url('${url}')`
-        wrapper.classList.toggle('image-wrapper__zoomed')
-        if (wrapper.classList.contains('image-wrapper__zoomed')) {
-            isZoomed = true
-            backgroundImagePosition(e)
-        } else {
-            isZoomed = false
-        }
-    }
-})
+desktopZoom()
 
-img.addEventListener('mousemove', (e) => {
-    if (isZoomed && window.innerWidth > 768) {
-        backgroundImagePosition(e)
-    }
-})
+/*
+*
+*  Mobile Pinch Zoom
+*
+*/
+mobileZoom()
+
+
+/*
+*
+*  Desktop Functions
+*
+*/
+
+// Init Desktop Zoom
+function desktopZoom() {
+  if (window.innerWidth > 768) {
+
+    // Desktop Click Event
+    img.addEventListener('click', (e) => {
+      const url = e.target.src
+      wrapper.style.backgroundImage = `url('${url}')`
+      wrapper.classList.toggle('image-wrapper__zoomed')
+      if (wrapper.classList.contains('image-wrapper__zoomed')) {
+          isZoomed = true
+          backgroundImagePosition(e)
+      } else {
+          isZoomed = false
+      }
+    })
+
+    // Mobile Mouse Move Event
+    img.addEventListener('mousemove', (e) => {
+      if (isZoomed) {
+          backgroundImagePosition(e)
+      }
+    })
+
+  }
+}
 
 // Set Background Image Position
 function backgroundImagePosition(e) {
@@ -62,75 +87,112 @@ function getCursorPos(e) {
     return {x : x, y : y};
 }
 
-// Percentage Calculator
-function percentage(partialValue, totalValue) {
-    return (100 * partialValue) / totalValue;
-}
+
 
 /*
 *
-*  Mobile Zoom
+*  Mobile Pinch Functions
 *
 */
 
-if (window.innerWidth <= 768) {
-    pinchZoom (img)
+// Init Mobile Zoom
+function mobileZoom() {
+  if (window.innerWidth <= 768) {
+    img.addEventListener('touchstart', e => {
+      e.preventDefault()
+      if (e.targetTouches.length === 2) {
+        const url = e.target.src
+        wrapper.style.backgroundImage = `url('${url}')`
+        wrapper.classList.add('image-wrapper__zoomed')
+        if (wrapper.classList.contains('image-wrapper__zoomed')) {
+          isZoomed = true
+          values.push(getMobilePositionValues(e))
+        }
+      }
+    })
+  
+    img.addEventListener('touchmove', e => {
+      e.preventDefault()
+      if (e.targetTouches.length === 2) {
+        values.push(getMobilePositionValues(e))
+      }
+      
+      setMobileImgZoom(wrapper, img, e, isZoomed)
+      if(isZoomed) {
+        moveMobileZoomedImg(img, wrapper, e)
+      }
+    })
+  }
 }
 
-function pinchZoom (imageElement) {
-    let imageElementScale = 1;
-  
-    let start = {};
-  
-    // Calculate distance between two fingers
-    const distance = (event) => {
-      return Math.hypot(event.touches[0].pageX - event.touches[1].pageX, event.touches[0].pageY - event.touches[1].pageY);
-    };
-  
-    imageElement.addEventListener('touchstart', (event) => {
-      if (event.touches.length === 2) {
-        event.preventDefault(); // Prevent page scroll
-  
-        // Calculate where the fingers have started on the X and Y axis
-        start.x = (event.touches[0].pageX + event.touches[1].pageX) / 2;
-        start.y = (event.touches[0].pageY + event.touches[1].pageY) / 2;
-        start.distance = distance(event);
-      }
-    });
-  
-    imageElement.addEventListener('touchmove', (event) => {
-      if (event.touches.length === 2) {
-        event.preventDefault(); // Prevent page scroll
-        let scale;
-  
-        // Safari provides event.scale as two fingers move on the screen
-        // For other browsers just calculate the scale manually
-        if (event.scale) {
-          scale = event.scale;
-        } else {
-          const deltaDistance = distance(event);
-          const startDistance = start.distance
-          scale = deltaDistance / startDistance;
-        }
-  
-        imageElementScale = Math.min(Math.max(1, scale), 4);
-  
-        // Calculate how much the fingers have moved on the X and Y axis
-        const deltaX = (((event.touches[0].pageX + event.touches[1].pageX) / 2) - start.x) * 2; // x2 for accelarated movement
-        const deltaY = (((event.touches[0].pageY + event.touches[1].pageY) / 2) - start.y) * 2; // x2 for accelarated movement
-  
-        // Transform the image to make it grow and move with fingers
-        const transform = `translate3d(${deltaX}px, ${deltaY}px, 0) scale(${imageElementScale})`;
-        imageElement.style.transform = transform;
-        imageElement.style.WebkitTransform = transform;
-        imageElement.style.zIndex = "9999";
-      }
-    });
+// Set Mobile Image Zoom - Two Fingers
+function setMobileImgZoom(wrapper, img, e) {
+  if (e.targetTouches.length === 2) {
+    const x = values[values.length - 1].x
+    const y = values[values.length - 1].y
+    const bgX = percentage(x, img.width)
+    const bgY = percentage(y, img.height)
     
-    // Uncomment below code to reset image to it's original format
-    // imageElement.addEventListener('touchend', (event) => {
-    //   imageElement.style.transform = "";
-    //   imageElement.style.WebkitTransform = "";
-    //   imageElement.style.zIndex = "";
-    // });
+    let scale = values[values.length - 1].distance / values[0].distance
+
+    let percentageScale
+    if (scale <= 1) {
+      percentageScale = 100
+      isZoomed = false
+    } else {
+      percentageScale = scale * 100
+    }
+
+    // Transform the background image to make it grow and move with fingers
+    wrapper.style.backgroundPosition = `${bgX}% ${bgY}%`
+    wrapper.style.backgroundSize = `${percentageScale}%`
   }
+}
+
+// Move mobile zoomed image with one finger
+function moveMobileZoomedImg(img, wrapper, e) {
+  if (e.targetTouches.length === 1) {
+    const x = e.targetTouches[0].pageX
+    const y = e.targetTouches[0].pageY
+    const bgX = percentage(x, img.width)
+    const bgY = percentage(y, img.height)
+    wrapper.style.backgroundPosition = `${bgX}% ${bgY}%`
+  }
+}
+
+// Get actual touch distance
+function getMobilePositionValues(e) {
+  if(e.targetTouches.length === 2) {
+    const xA = e.targetTouches[0].pageX
+    const xB = e.targetTouches[1].pageX
+    const yA = e.targetTouches[0].pageY
+    const yB = e.targetTouches[1].pageY
+    
+    const distance = getDistance(xA, yA, xB, yB)
+    const x = (xA + xB) / 2;
+    const y = (yA + yB) / 2;
+
+    return {x:x, y:y, distance:distance}
+  }
+}
+
+// Calculate distance between two fingers
+function getDistance(xA, yA, xB, yB) { 
+	const xDiff = xA - xB; 
+	const yDiff = yA - yB;
+
+	return Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
+}
+
+
+
+/*
+*
+*  Global Functions
+*
+*/
+
+// Percentage Calculator
+function percentage(initValue, finalValue) {
+    return (100 * initValue) / finalValue;
+}

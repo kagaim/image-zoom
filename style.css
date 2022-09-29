@@ -21,7 +21,7 @@ h1 {
 .image-wrapper {
     position: relative;
     overflow: hidden;
-    max-width: 200px;
+    max-width: 250px;
     margin: 0 auto;
     display: block;
     background-repeat: no-repeat;
@@ -34,17 +34,13 @@ h1 {
         cursor: zoom-in;
         max-width: 768px;
     }
-}
 
-.image-wrapper__zoomed {
-    cursor: zoom-out;
-    background-size: 200%;
+    .image-wrapper__zoomed {
+        cursor: zoom-out;
+        background-size: 200%;
+    }
 }
 
 .image-wrapper__zoomed > img {
-    opacity: 0;
-}
-
-.image-wrapper__mobile-zoomed > img {
     opacity: 0;
 }
