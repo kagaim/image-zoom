@@ -1,4 +1,4 @@
-# Image Zoom 
+# Image Zoom using Vanilla JS
 This code gives different image zoom experiences for desktop and mobile screens. For desktops, a zoom in cursor is used, while on mobile you have pinch to zoom functionality.
 
 ## Demo Site
