@@ -107,6 +107,7 @@ function mobileZoom() {
         if (wrapper.classList.contains('image-wrapper__zoomed')) {
           isZoomed = true
           values.push(getMobilePositionValues(e))
+          console.log('Values', values);
         }
       }
     })
@@ -115,6 +116,7 @@ function mobileZoom() {
       e.preventDefault()
       if (e.targetTouches.length === 2) {
         values.push(getMobilePositionValues(e))
+        console.log('Values', values);
       }
       
       setMobileImgZoom(wrapper, img, e, isZoomed)
@@ -130,6 +132,7 @@ function setMobileImgZoom(wrapper, img, e) {
   if (e.targetTouches.length === 2) {
     const x = values[values.length - 1].x
     const y = values[values.length - 1].y
+
     const bgX = percentage(x, img.width)
     const bgY = percentage(y, img.height)
     
@@ -152,10 +155,20 @@ function setMobileImgZoom(wrapper, img, e) {
 // Move mobile zoomed image with one finger
 function moveMobileZoomedImg(img, wrapper, e) {
   if (e.targetTouches.length === 1) {
-    const x = e.targetTouches[0].pageX
-    const y = e.targetTouches[0].pageY
-    const bgX = percentage(x, img.width)
-    const bgY = percentage(y, img.height)
+    let pos, x, y, bgX, bgY
+    pos = getCursorPos(e);
+    x = pos.x
+    y = pos.y
+
+    // Prevent X, Y from using cordinates outside of the image
+    if (x > img.width) { x = img.width }
+    if (x < 0) {x = 0}
+    if (y > img.height) { y = img.height }
+    if (y < 0) {y = 0}
+
+    bgX = percentage(x, img.width)
+    bgY = percentage(y, img.height)
+
     wrapper.style.backgroundPosition = `${bgX}% ${bgY}%`
   }
 }
